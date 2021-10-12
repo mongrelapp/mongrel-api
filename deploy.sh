@@ -1,13 +1,13 @@
-#!bin/bash
- 
- # Install packages
- yarn
+#!/bin/bash
 
- # Build project
+cd /var/www/mongrel/api
+
+pm2 delete dashboard
+
+rm -rf .next node_modules yarn.lock
+
+yarn
+
 yarn build
 
-# Restart service
-pm2 restart api
-
-# Restart nginx
-service nginx restart
+pm2 start
