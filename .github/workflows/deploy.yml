@@ -41,7 +41,7 @@ jobs:
         region: ['us-east-2']
 
     needs: [buildAndTest]
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v2
 
