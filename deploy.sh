@@ -2,9 +2,9 @@
 
 cd /var/www/mongrel/api
 
-pm2 delete dashboard
+pm2 delete api
 
-rm -rf .next node_modules yarn.lock
+rm -rf dist node_modules yarn.lock
 
 yarn
 
