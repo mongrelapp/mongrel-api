@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: .
-    destination: /var/www/mongrel/dashboard
+    destination: /var/www/mongrel/api
 
 hooks:
   ApplicationStart:
