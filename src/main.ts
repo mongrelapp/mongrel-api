@@ -37,7 +37,7 @@ async function bootstrap() {
     app,
     new DocumentBuilder()
       .setTitle(appName)
-      .setDescription(`The ${appName} API documentation`)
+      .setDescription(`The ${appName} API documentation CI`)
       .setVersion('1.0')
       .addServer(serverUrl, 'REST APIs')
       .addBearerAuth()
