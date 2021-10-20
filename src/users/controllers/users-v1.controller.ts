@@ -24,6 +24,7 @@ import { AuthUser } from 'src/common/decorators/auth-user.decorator';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { User } from '../user.entity';
 import { UsersService } from '../users.service';
+import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 
 @Controller({
   path: 'users',
@@ -33,6 +34,11 @@ import { UsersService } from '../users.service';
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 export class UsersControllerV1 {
+  constructor(
+    private usersService: UsersService,
+    private readonly subscriptionsService: SubscriptionsService,
+  ) {}
+
   /**
    * Get all users
    */
@@ -61,7 +67,11 @@ export class UsersControllerV1 {
     const user = await this.usersService.findOneOrFail({ id: userId }, [
       'organization',
     ]);
-    return { data: user };
+    const { data: subscription } =
+      await this.subscriptionsService.currentSubscription(
+        user.stripeCustimerId,
+      );
+    return { data: { ...user, subscription: subscription } };
   }
 
   /**
@@ -97,6 +107,4 @@ export class UsersControllerV1 {
     await this.usersService.deleteUser(authUser, user);
     return { message: 'User deleted successfully' };
   }
-
-  constructor(private usersService: UsersService) {}
 }

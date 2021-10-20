@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { UsersControllerV1 } from './controllers/users-v1.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user.entity';
@@ -16,7 +17,7 @@ import { ConfigModule } from '@nestjs/config';
     StripeModule,
     ConfigModule,
   ],
-  providers: [UsersService],
+  providers: [UsersService, SubscriptionsService],
   exports: [UsersService],
   controllers: [UsersControllerV1],
 })
