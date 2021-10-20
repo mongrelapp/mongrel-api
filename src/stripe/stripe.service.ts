@@ -141,7 +141,7 @@ export class StripeService {
       });
     } catch (error) {
       if (error?.code === StripeError.ResourceMissing) {
-        throw new BadRequestException("Customer doesn't subscribe yet.");
+        return { data: [] };
       }
       throw new InternalServerErrorException();
     }
