@@ -4,6 +4,8 @@ files:
   - source: .
     destination: /var/www/mongrel/api
 
+file_exists_behavior: OVERWRITE
+
 hooks:
   ApplicationStart:
     - location: deploy.sh
