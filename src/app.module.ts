@@ -58,7 +58,7 @@ import { SubscribersModule } from './subscribers/subscribers.module';
           port: +configService.get<number>('MAIL_PORT'),
           secure: true,
           defaults: {
-            from: '"Mongrel" <support@mongrel.app>',
+            from: '"Mongrel" <admin@mongrel.app>',
           },
           auth: {
             user: configService.get<string>('MAIL_USERNAME'),

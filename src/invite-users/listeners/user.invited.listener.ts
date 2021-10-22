@@ -14,7 +14,7 @@ export class UserInvitedListener {
 
     this.mailerService.sendMail({
       to: event.inviteUser.inviteeEmail,
-      from: "support@mongrel.app",
+      from: "admin@mongrel.app",
       subject: "You have been invited to collaborate!",
       template: './invite-user',
       context: {
