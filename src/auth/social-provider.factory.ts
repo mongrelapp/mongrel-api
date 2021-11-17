@@ -3,6 +3,7 @@ import { AbstractSocialProviderAuthenticate } from './interfaces/social-provider
 import { AbstractSocialProviderFactory } from './interfaces/abstract-social-provider-factory';
 import { GoogleSocialProvider } from './strategies/google-social-provider';
 import { FacebookSocialProvider } from './strategies/facebook-social-provider';
+import { GithubSocialProvider } from './strategies/github-social-provider';
 
 export class SocialProviderFactory extends AbstractSocialProviderFactory {
   /**
@@ -12,6 +13,9 @@ export class SocialProviderFactory extends AbstractSocialProviderFactory {
     switch (params.socialProvider) {
       case SocialProviderTypeEnum.GOOGLE:
         return new GoogleSocialProvider(params.code);
+
+      case SocialProviderTypeEnum.GITHUB:
+        return new GithubSocialProvider(params.code);
 
       case SocialProviderTypeEnum.FACEBOOK:
         return new FacebookSocialProvider(params.token);

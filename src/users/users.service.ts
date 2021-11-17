@@ -17,6 +17,7 @@ import { OrganizationMembersService } from 'src/organization-members/organizatio
 import { OrganizationMemberRoleEnum } from 'src/organization-members/organization-member.entity';
 import { StripeService } from '../stripe/stripe.service';
 import { ConfigService } from '@nestjs/config';
+import { validateEmail } from '../utils';
 
 @Injectable()
 export class UsersService {
@@ -99,19 +100,19 @@ export class UsersService {
   async createStripeCustomer(user: User) {
     const stripeCustomer = await this.stripeService.createCustomer(
       `${user.firstName} ${user.lastName}`,
-      user.email
+      user.email,
     );
 
     const freeSubscription = await this.stripeService.createSubscription(
       this.configService.get('STRIPE_PROD_FREE'),
-      stripeCustomer.id
+      stripeCustomer.id,
     );
-    
+
     const savedUser = await this.userRepo.save({
-        ...user,
-        id: user.id,
-        stripeCustimerId: stripeCustomer.id,        
-      });
+      ...user,
+      id: user.id,
+      stripeCustimerId: stripeCustomer.id,
+    });
     console.log(savedUser);
   }
 
@@ -124,21 +125,28 @@ export class UsersService {
       name: data.email,
     });
 
-    const stripeCustomer = await this.stripeService.createCustomer(
-      `${data.firstName} ${data.lastName}`,
-       data.email
-    );
+    // validate email as github account may have not public email.
+    const stripeCustomer =
+      validateEmail(data.email) &&
+      (await this.stripeService.createCustomer(
+        `${data.firstName} ${data.lastName}`,
+        data.email,
+      ));
 
-    const freeSubscription = await this.stripeService.createSubscription(
-      this.configService.get('STRIPE_PROD_FREE'),
-      stripeCustomer.id
-    );
+    const freeSubscription =
+      validateEmail(data.email) &&
+      (await this.stripeService.createSubscription(
+        this.configService.get('STRIPE_PROD_FREE'),
+        stripeCustomer.id,
+      ));
 
     const user = await this.userRepo.save(
       this.userRepo.create({
         ...data,
         organization,
-        stripeCustimerId: stripeCustomer.id,
+        ...(validateEmail(data.email)
+          ? { stripeCustimerId: stripeCustomer.id }
+          : {}),
       }),
     );
 

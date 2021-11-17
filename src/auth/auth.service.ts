@@ -15,6 +15,7 @@ import { RegisterDto } from './dto/register.dto';
 import { SocialLoginDto } from './dto/social-login.dto';
 import { SocialUser } from './interfaces/social-provider-authenticate.interface';
 import { SocialProviderFactory } from './social-provider.factory';
+import { validateEmail } from '../utils';
 
 @Injectable()
 export class AuthService {
@@ -108,15 +109,17 @@ export class AuthService {
       );
     }
 
-    if(user && 
-      (user.stripeCustimerId === null || user.stripeCustimerId === '')
+    if (
+      user &&
+      (user.stripeCustimerId === null || user.stripeCustimerId === '') &&
+      validateEmail(user.email)
     ) {
       await this.usersService.createStripeCustomer(user);
     }
 
     // insert
     if (!user) {
-      const newUser = await this.usersService.registerUser(socialUser);      
+      const newUser = await this.usersService.registerUser(socialUser);
 
       const authenticate = await this.generateTokens(newUser);
       return { user: newUser, authenticate };

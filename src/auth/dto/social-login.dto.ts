@@ -4,16 +4,19 @@ export enum SocialProviderTypeEnum {
   FACEBOOK = 'FACEBOOK',
   GOOGLE = 'GOOGLE',
   TWITTER = 'TWITTER',
+  GITHUB = 'GITHUB',
 }
 
 export class SocialLoginDto {
   /**
-   * This field is not required when authenticating with google
+   * This field is not required when authenticating with google, github
    * @example The token you get from social provider's response
    */
   @ValidateIf(
     (o) =>
-      o.socialProvider && o.socialProvider !== SocialProviderTypeEnum.GOOGLE,
+      o.socialProvider &&
+      o.socialProvider !== SocialProviderTypeEnum.GOOGLE &&
+      o.socialProvider !== SocialProviderTypeEnum.GITHUB,
   )
   @IsNotEmpty()
   @IsString()
