@@ -25,7 +25,6 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { User } from '../user.entity';
 import { UsersService } from '../users.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
-import { validateEmail } from '../../utils';
 
 @Controller({
   path: 'users',
@@ -69,10 +68,9 @@ export class UsersControllerV1 {
       'organization',
     ]);
     const { data: subscription } =
-      validateEmail(user.email) &&
-      (await this.subscriptionsService.currentSubscription(
+      await this.subscriptionsService.currentSubscription(
         user.stripeCustimerId,
-      ));
+      );
     return { data: { ...user, subscription: subscription } };
   }
 

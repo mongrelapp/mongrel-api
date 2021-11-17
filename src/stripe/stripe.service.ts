@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 
 import StripeError from '../utils/stripeError.enum';
+import { validateEmail } from '../utils';
 
 @Injectable()
 export class StripeService {
@@ -20,8 +21,11 @@ export class StripeService {
 
   public async createCustomer(name: string, email: string) {
     try {
+      const validEmail = validateEmail(email)
+        ? email
+        : `${email}@${process.env.SUFFIX_MONGREL_EMAIL}`;
       const customers = await this.stripe.customers.list({
-        email: email,
+        email: validEmail,
         limit: 1,
       });
 
@@ -30,7 +34,7 @@ export class StripeService {
       } else {
         return this.stripe.customers.create({
           name,
-          email,
+          email: validEmail,
         });
       }
     } catch (error) {

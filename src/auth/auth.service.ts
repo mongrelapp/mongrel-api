@@ -5,7 +5,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { compare } from 'bcrypt';
-import { use } from 'passport';
 import { AccessTokenService } from 'src/access-tokens/access-tokens.service';
 import { RefreshTokenService } from 'src/refresh-tokens/refresh-tokens.service';
 import { User } from 'src/users/user.entity';
@@ -15,7 +14,6 @@ import { RegisterDto } from './dto/register.dto';
 import { SocialLoginDto } from './dto/social-login.dto';
 import { SocialUser } from './interfaces/social-provider-authenticate.interface';
 import { SocialProviderFactory } from './social-provider.factory';
-import { validateEmail } from '../utils';
 
 @Injectable()
 export class AuthService {
@@ -111,8 +109,7 @@ export class AuthService {
 
     if (
       user &&
-      (user.stripeCustimerId === null || user.stripeCustimerId === '') &&
-      validateEmail(user.email)
+      (user.stripeCustimerId === null || user.stripeCustimerId === '')
     ) {
       await this.usersService.createStripeCustomer(user);
     }

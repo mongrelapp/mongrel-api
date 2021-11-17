@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  HttpException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -8,16 +7,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, FindConditions, Repository } from 'typeorm';
 import { User } from './user.entity';
 import {
+  IPaginationOptions,
   paginate,
   Pagination,
-  IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
 import { OrganizationsService } from 'src/organizations/organizations.service';
 import { OrganizationMembersService } from 'src/organization-members/organization-members.service';
 import { OrganizationMemberRoleEnum } from 'src/organization-members/organization-member.entity';
 import { StripeService } from '../stripe/stripe.service';
 import { ConfigService } from '@nestjs/config';
-import { validateEmail } from '../utils';
 
 @Injectable()
 export class UsersService {
@@ -126,27 +124,21 @@ export class UsersService {
     });
 
     // validate email as github account may have not public email.
-    const stripeCustomer =
-      validateEmail(data.email) &&
-      (await this.stripeService.createCustomer(
-        `${data.firstName} ${data.lastName}`,
-        data.email,
-      ));
+    const stripeCustomer = await this.stripeService.createCustomer(
+      `${data.firstName} ${data.lastName}`,
+      data.email,
+    );
 
-    const freeSubscription =
-      validateEmail(data.email) &&
-      (await this.stripeService.createSubscription(
-        this.configService.get('STRIPE_PROD_FREE'),
-        stripeCustomer.id,
-      ));
+    const freeSubscription = await this.stripeService.createSubscription(
+      this.configService.get('STRIPE_PROD_FREE'),
+      stripeCustomer.id,
+    );
 
     const user = await this.userRepo.save(
       this.userRepo.create({
         ...data,
         organization,
-        ...(validateEmail(data.email)
-          ? { stripeCustimerId: stripeCustomer.id }
-          : {}),
+        stripeCustimerId: stripeCustomer.id,
       }),
     );
 
