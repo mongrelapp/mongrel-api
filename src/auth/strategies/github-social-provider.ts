@@ -5,6 +5,7 @@ import {
 import axios, { AxiosResponse } from 'axios';
 import { Logger } from '@nestjs/common';
 import { SocialProviderTypeEnum } from '../dto/social-login.dto';
+import { ConfigService } from '@nestjs/config';
 
 export class GithubSocialProvider extends AbstractSocialProviderAuthenticate {
   /**
@@ -12,9 +13,15 @@ export class GithubSocialProvider extends AbstractSocialProviderAuthenticate {
    */
   async validate(): Promise<SocialUser | null> {
     try {
+      const configService = new ConfigService();
+      configService.get('GITHUB_CLIENT_ID');
       const accessToken: string = await axios({
         method: 'post',
-        url: `https://github.com/login/oauth/access_token?client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${process.env.GITHUB_CLIENT_SECRET}&code=${this.code}`,
+        url: `https://github.com/login/oauth/access_token?client_id=${configService.get(
+          'GITHUB_CLIENT_ID',
+        )}&client_secret=${configService.get('GITHUB_CLIENT_SECRET')}&code=${
+          this.code
+        }`,
         headers: {
           accept: 'application/json',
         },

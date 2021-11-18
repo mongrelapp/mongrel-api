@@ -23,7 +23,7 @@ export class StripeService {
     try {
       const validEmail = validateEmail(email)
         ? email
-        : `${email}@${process.env.SUFFIX_MONGREL_EMAIL}`;
+        : `${email}@${this.configService.get('SUFFIX_MONGREL_EMAIL')}`;
       const customers = await this.stripe.customers.list({
         email: validEmail,
         limit: 1,
