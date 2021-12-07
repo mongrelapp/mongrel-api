@@ -52,4 +52,13 @@ export class TwilioController {
       verificationData.code,
     );
   }
+
+  @Post('resend-verification')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  async resendPhoneNumberVerification(@Body() req) {
+    return await this.twilioService.initiatePhoneNumberVerification(
+      `+${req.phoneNumber}`,
+    );
+  }
 }

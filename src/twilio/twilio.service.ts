@@ -7,9 +7,11 @@ import { UsersService } from '../users/users.service';
 @Injectable()
 export class TwilioService {
   private twilioClient: Twilio;
-  private readonly usersService: UsersService;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly usersService: UsersService,
+  ) {
     const accountSid = configService.get<string>('TWILIO_ACCOUNT_SID');
     const authToken = configService.get<string>('TWILIO_AUTH_TOKEN');
     this.twilioClient = new Twilio(accountSid, authToken);
@@ -36,13 +38,17 @@ export class TwilioService {
 
     const result = await this.twilioClient.verify
       .services(serviceSid)
-      .verificationChecks.create({ to: phoneNumber, code: verificationCode });
+      .verificationChecks.create({ to: phoneNumber, code: verificationCode })
+      .catch((err) => {
+        console.log('twilio error', err);
+        throw new BadRequestException(
+          'Your verification code has been expired, resend again.',
+        );
+      });
 
     if (!result.valid || result.status !== 'approved') {
       throw new BadRequestException('Wrong code provided');
     }
-
-    console.log('resut', result);
 
     return await this.usersService.markPhoneNumberAsConfirmed(userId);
   }
