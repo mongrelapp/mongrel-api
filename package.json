@@ -56,10 +56,11 @@
     "slugify": "^1.6.0",
     "stripe": "^8.176.0",
     "swagger-ui-express": "^4.1.6",
+    "twilio": "^3.71.3",
     "typeorm": "^0.2.36"
   },
   "devDependencies": {
-    "@nestjs/cli": "^8.0.0",
+    "@nestjs/cli": "^8.1.5",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
     "@types/axios": "^0.14.0",

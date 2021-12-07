@@ -21,6 +21,7 @@ import { PackagesModule } from './packages/package.module';
 import { StripeModule } from './stripe/stripe.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
+import { TwilioModule } from './twilio/twilio.module';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import { SubscribersModule } from './subscribers/subscribers.module';
     StripeModule,
     SubscriptionsModule,
     SubscribersModule,
+    TwilioModule,
   ],
   providers: [AppService],
   controllers: [],

@@ -91,7 +91,7 @@ export class UsersService {
   /**
    * Find by id
    */
-  findById(id: number) {
+  findById(id: number | string) {
     return this.userRepo.findOne(id);
   }
 
@@ -149,6 +149,15 @@ export class UsersService {
     });
 
     return user;
+  }
+
+  async markPhoneNumberAsConfirmed(userId: string) {
+    const user = await this.findById(userId);
+    return await this.userRepo.save({
+      ...user,
+      id: user.id,
+      verified: true,
+    });
   }
 
   constructor(
