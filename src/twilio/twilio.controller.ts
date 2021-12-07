@@ -11,16 +11,20 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import TwilioVerifyDto from './dto/twilio-verify.dto';
 import CheckVerificationCodeDto from './dto/check-verification-code.dto';
+import { UsersService } from '../users/users.service';
 
 @Controller({
   path: 'twilio',
   version: '1',
 })
 export class TwilioController {
-  constructor(private readonly twilioService: TwilioService) {}
+  constructor(
+    private readonly twilioService: TwilioService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Post('initiate-verification')
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   async initiatePhoneNumberVerification(
     @Body() twilioVerifyDto: TwilioVerifyDto,
@@ -28,13 +32,14 @@ export class TwilioController {
     if (twilioVerifyDto.verified) {
       throw new BadRequestException('Phone number already confirmed');
     }
+    await this.usersService.updateUser(twilioVerifyDto);
     return await this.twilioService.initiatePhoneNumberVerification(
       `+${twilioVerifyDto.phoneNumber}`,
     );
   }
 
   @Post('check-verification-code')
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   async checkVerificationCode(
     @Body() verificationData: CheckVerificationCodeDto,
   ) {

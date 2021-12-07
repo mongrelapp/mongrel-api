@@ -1,13 +1,17 @@
-import {
-  IsString,
-  IsNotEmpty,
-  Matches, IsBoolean,
-} from 'class-validator';
+import { IsString, IsNotEmpty, Matches, IsBoolean } from 'class-validator';
 
 export class TwilioVerifyDto {
   @IsString()
   @IsNotEmpty()
+  userId: string;
+
+  @IsString()
+  @IsNotEmpty()
   fullName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  orgId: string;
 
   @IsString()
   @IsNotEmpty()

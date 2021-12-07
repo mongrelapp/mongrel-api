@@ -16,6 +16,7 @@ import { OrganizationMembersService } from 'src/organization-members/organizatio
 import { OrganizationMemberRoleEnum } from 'src/organization-members/organization-member.entity';
 import { StripeService } from '../stripe/stripe.service';
 import { ConfigService } from '@nestjs/config';
+import TwilioVerifyDto from '../twilio/dto/twilio-verify.dto';
 
 @Injectable()
 export class UsersService {
@@ -149,6 +150,20 @@ export class UsersService {
     });
 
     return user;
+  }
+
+  async updateUser(twilioVerifyDto: TwilioVerifyDto) {
+    const user = await this.findById(twilioVerifyDto.userId);
+    await this.userRepo.save({
+      ...user,
+      id: user.id,
+      phoneNumber: twilioVerifyDto.phoneNumber,
+    });
+
+    await this.organizationsService.updateOrgName(
+      twilioVerifyDto.orgId,
+      twilioVerifyDto.orgName,
+    );
   }
 
   async markPhoneNumberAsConfirmed(userId: string) {

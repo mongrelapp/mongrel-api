@@ -145,6 +145,15 @@ export class OrganizationsService {
     );
   }
 
+  async updateOrgName(orgId, orgName) {
+    const organization = await this.findById(orgId);
+    await this.organizationRepo.save({
+      ...organization,
+      id: orgId,
+      name: orgName,
+    });
+  }
+
   /**
    * Get organization members
    */
