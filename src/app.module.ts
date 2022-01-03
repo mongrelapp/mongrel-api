@@ -22,6 +22,8 @@ import { StripeModule } from './stripe/stripe.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { SubscribersModule } from './subscribers/subscribers.module';
 import { TwilioModule } from './twilio/twilio.module';
+import { CollectEmailModule } from './collect-email/collect-email.module';
+import { CollectKeywordsModule } from './collect-keywords/collect-keywords.module';
 
 @Module({
   imports: [
@@ -92,6 +94,8 @@ import { TwilioModule } from './twilio/twilio.module';
     SubscriptionsModule,
     SubscribersModule,
     TwilioModule,
+    CollectEmailModule,
+    CollectKeywordsModule,
   ],
   providers: [AppService],
   controllers: [],

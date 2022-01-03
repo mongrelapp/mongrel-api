@@ -52,4 +52,19 @@ export class TwilioService {
 
     return await this.usersService.markPhoneNumberAsConfirmed(userId);
   }
+
+  async smsReply(to: string) {
+    try {
+      return await this.twilioClient.messages
+        .create({
+          body: 'McAvoy or Stewart? These timelines can get so confusing.',
+          from: this.configService.get('TWILIO_PHONE_NUMBER'),
+          to,
+        })
+        .then((message) => console.log(message.sid))
+        .catch((err) => console.log(err));
+    } catch (e) {
+      throw new BadRequestException('Cannot send sms');
+    }
+  }
 }
